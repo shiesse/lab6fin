@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ quiz[1] }} - Quiz</title>
+</head>
+<body>
+    <h1>{{ quiz[1] }}</h1>
+    <form method="post" action="/quiz_results/{{ quiz[0] }}">
+        {% for question in questions %}
+        <h2>{{ question[2] }}</h2>
+        {% set question_answers = [] %}
+        {% for answer in answers %}
+            {% if answer[1] == question[0] %}
+                {% set _ = question_answers.append(answer) %}
+            {% endif %}
+        {% endfor %}
+        {% if question_answers %}
+        <ul>
+            {% for answer in question_answers %}
+            <li>
+                <label>
+                    <input type="radio" name="answer_{{ question[0] }}" value="{{ answer[0] }}">
+                    {{ answer[2] }}
+                </label>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No answers available for this question.</p>
+        {% endif %}
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

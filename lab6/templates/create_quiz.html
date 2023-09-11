@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Quiz</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Create a New Quiz</h1>
+    
+    <form method="POST" action="/create_quiz">
+        <label for="title">Quiz Title:</label>
+        <input type="text" name="title" required><br>
+        
+        <label for="description">Quiz Description:</label>
+        <input type="text" name="description" required><br>
+        
+        
+        <div id="questions-container">
+           
+        </div>
+        <button type="button" id="add-question">Add Question</button>
+        <button type="submit">Create Quiz</button>
+    </form>
+    
+    <script>
+        $(document).ready(function() {
+            let questionNumber = 1;
+            
+            $("#add-question").click(function() {
+                let questionHtml = `
+                    <div>
+                        <label for="question_${questionNumber}">Question ${questionNumber}:</label>
+                        <input type="text" name="question_${questionNumber}" required><br>
+                        <label>Answers:</label><br>
+                        <div id="answers-container_${questionNumber}">
+                            <input type="text" name="answer_${questionNumber}_1" required>
+                            <input type="checkbox" name="correct_${questionNumber}_1"> Correct<br>
+                        
+                        </div>
+                        <button type="button" class="add-answer" data-question="${questionNumber}" data-answer="2">Add Answer</button>
+                        <button type="button" class="remove-question">Remove Question</button>
+                    </div>
+                `;
+                $("#questions-container").append(questionHtml);
+                questionNumber++;
+            });
+            
+            $(document).on("click", ".add-answer", function() {
+                let questionNumber = $(this).data("question");
+                let answerNumber = $(this).data("answer");
+                
+                let answerHtml = `
+                    <input type="text" name="answer_${questionNumber}_${answerNumber}" required>
+                    <button type="button" class="remove-answer" data-question="${questionNumber}" data-answer="${answerNumber}">Remove Answer</button>
+                    <input type="checkbox" name="correct_${questionNumber}_${answerNumber}"> Correct<br>
+                `;
+                $(`#answers-container_${questionNumber}`).append(answerHtml);
+                answerNumber++;
+                $(this).data("answer", answerNumber);
+            });
+
+            $(document).on("click", ".remove-question", function() {
+                $(this).closest("div").remove();
+            });
+
+            $(document).on("click", ".remove-answer", function() {
+                let questionNumber = $(this).data("question");
+                let answerNumber = $(this).data("answer");
+                $(`[name="answer_${questionNumber}_${answerNumber}"]`).remove();
+                $(`[name="correct_${questionNumber}_${answerNumber}"]`).remove();
+                $(this).remove();
+            });
+        });
+    </script>
+</body>
+</html>

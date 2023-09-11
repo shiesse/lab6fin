@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+</head>
+<body>
+    <h1>Available Quizzes</h1>
+    <ul>
+        {% for quiz in quizzes %}
+            <li>
+                <a href="{{ url_for('take_quiz', quiz_id=quiz[0]) }}">{{ quiz[1] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <a href="{{ url_for('create_quiz') }}">Create a New Quiz</a>
+</body>
+</html>
